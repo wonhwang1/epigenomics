@@ -1,6 +1,8 @@
 params.fasta = "http://hgdownload.cse.ucsc.edu/goldenPath/sacCer3/bigZips/chromFa.tar.gz"
 params.chrom_sizes = "http://hgdownload.cse.ucsc.edu/goldenPath/sacCer3/bigZips/sacCer3.chrom.sizes > refs/sacCer3.chrom.sizes"
 
+ch_fastq = channel.fromSRA('SRR3033157').view()
+
 process create_genome {
     conda 'bwa samtools'
     input:
@@ -22,6 +24,15 @@ process bwa_index {
     """
     bwa index $REF
     samtools faidx $REF
+    """
+}
+
+process bwa_align {
+
+    """"
+    bwa mem $REF \\
+        data/SRR3033154_1.fastq\\
+        | samtools sort > SRR3033154.bam
     """
 }
 
